@@ -9,6 +9,8 @@ var configuration = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//HttpClient
 builder.Services.AddHttpClient();
 
 //Services

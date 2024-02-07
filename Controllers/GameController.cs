@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using UserDataService.Interfaces;
 
 namespace UserDataService.Controllers
 {
@@ -6,5 +7,11 @@ namespace UserDataService.Controllers
     [Route("game")]
     public class GameController : ControllerBase
     {
+        private readonly IGameService _service;
+
+        public GameController(IGameService service)
+        {
+            _service = service;
+        }
     }
 }

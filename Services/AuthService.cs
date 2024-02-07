@@ -2,32 +2,20 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using UserDataService.Interfaces;
 using UserDataService.Models;
 
-namespace UserDataService.Requests
+namespace UserDataService.Services
 {
-    public static class AuthRequest
+    public class AuthService : IAuthService
     {
-        public static WebApplication RegisterAuthEndpoints(this WebApplication app)
-        {
-            app.MapGet("auth/google", AuthRequest.GetToken);
-            app.MapGet("protected", AuthRequest.Protected);
-            return app;
-        }
-
-        public static IResult Protected(HttpContext httpContext)
-        {
-            var auth = httpContext.Request.Headers.Authorization;
-            return Results.Ok(auth);
-        }
-
-        public static IResult GetToken(HttpContext httpContext, IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public Task<TokenDto> AuthenticateAsync(HttpContext httpContext, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             var code = httpContext.Request.Query["code"];
-       
+
             if (string.IsNullOrEmpty(code))
             {
-                return Results.Unauthorized();
+                return Task.FromResult(new TokenDto());
             }
 
             var clientId = configuration["Oauth:Google:ClientId"];
@@ -77,10 +65,19 @@ namespace UserDataService.Requests
                 expires: expires,
                 signingCredentials: credentials,
                 issuer: issuer,
-                audience: audience 
+                audience: audience
                 );
 
-            return Results.Ok(jwtHandler.WriteToken(jwtBearer));
+            return Task.FromResult(new TokenDto { Token = jwtHandler.WriteToken(jwtBearer) });
+        }
+
+        public Task<TokenDto> GetTokenAsync(HttpContext httpContext)
+        {
+            var token = httpContext.Request.Headers.Authorization;
+            return Task.FromResult(new TokenDto()
+            {
+                Token = token
+            });
         }
     }
 }

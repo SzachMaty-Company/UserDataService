@@ -15,9 +15,10 @@ namespace UserDataService.Requests
             return app;
         }
 
-        public static IResult Protected()
+        public static IResult Protected(HttpContext httpContext)
         {
-            return Results.Ok(true);
+            var auth = httpContext.Request.Headers.Authorization;
+            return Results.Ok(auth);
         }
 
         public static IResult GetToken(HttpContext httpContext, IHttpClientFactory httpClientFactory, IConfiguration configuration)

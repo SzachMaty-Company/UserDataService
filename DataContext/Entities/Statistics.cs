@@ -2,6 +2,6 @@
 {
     public class Statistics : BaseEntity
     {
-        public virtual List<Game> Games { get; set; }
+        public List<Game> Games { get; set; }
     }
 }

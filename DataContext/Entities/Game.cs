@@ -2,6 +2,6 @@
 {
     public class Game : BaseEntity
     {
-        public virtual List<Move> Moves { get; set; }
+        public List<Move> Moves { get; set; }
     }
 }

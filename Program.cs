@@ -21,6 +21,7 @@ builder.Services.AddScoped<IGameService, GameService>();
 //HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
+//DbContext
 builder.Services.AddDbContext<UserDataContext>(opt =>
         opt.UseSqlServer(configuration.GetConnectionString("Default")));
 

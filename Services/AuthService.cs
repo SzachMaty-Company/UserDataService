@@ -65,13 +65,13 @@ namespace UserDataService.Services
 
             var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == subject);
 
-            if(user == null)
+            if (user == null)
             {
                 user = new User
                 {
                     Id = subject,
-                    UserName = userName,
-                    UserEmail = userEmail,
+                    Name = userName,
+                    Email = userEmail,
                 };
                 await _db.Users.AddAsync(user);
                 await _db.SaveChangesAsync();
@@ -82,8 +82,8 @@ namespace UserDataService.Services
 
             var claims = new List<Claim>()
             {
-                new(ClaimTypes.Email, user.UserEmail),
-                new(ClaimTypes.Name, user.UserName),
+                new(ClaimTypes.Email, user.Email),
+                new(ClaimTypes.Name, user.Name),
                 new(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 

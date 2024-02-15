@@ -10,7 +10,8 @@ namespace UserDataService.DataContext.Configuration
         {
             builder.HasOne(x => x.Friend)
                 .WithOne()
-                .HasForeignKey<Friendship>(x => x.FriendId);
+                .HasForeignKey<Friendship>(x => x.FriendId)
+                .OnDelete(DeleteBehavior.ClientNoAction);
         }
     }
 }

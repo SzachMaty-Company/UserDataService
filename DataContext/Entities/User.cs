@@ -7,5 +7,6 @@
         public string Email { get; set; }
         public Statistics Statistics { get; set; }
         public List<Friendship> Friendships { get; set; }
+        public List<Game> Games { get; set; }
     }
 }

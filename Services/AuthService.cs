@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UserDataService.DataContext;
-using UserDataService.DataContext.Entities;
 using UserDataService.Interfaces;
 using UserDataService.Models;
 
@@ -61,30 +59,30 @@ namespace UserDataService.Services
 
             var userEmail = tokenContent.Claims.First(x => x.Type == "email").Value;
             var userName = tokenContent.Claims.First(x => x.Type == "name").Value;
-            var subject = int.Parse(tokenContent.Claims.First(x => x.Type == "sub").Value);
+            var subject = tokenContent.Claims.First(x => x.Type == "sub").Value;
 
-            var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == subject);
+            //var user = await _db.Users.FirstOrDefaultAsync(x => x.Email == userEmail);
 
-            if (user == null)
+            /*if (user == null)
             {
                 user = new User
                 {
-                    Id = subject,
+                    Surname = "",
                     Name = userName,
                     Email = userEmail,
                 };
                 await _db.Users.AddAsync(user);
                 await _db.SaveChangesAsync();
             }
-
+            */
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
 
             var claims = new List<Claim>()
             {
-                new(ClaimTypes.Email, user.Email),
-                new(ClaimTypes.Name, user.Name),
-                new(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new(ClaimTypes.Email, userEmail),
+                new(ClaimTypes.Name, userName),
+                new(ClaimTypes.NameIdentifier, subject)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

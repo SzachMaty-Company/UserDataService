@@ -12,6 +12,11 @@ namespace UserDataService.DataContext.Configuration
                 .WithOne()
                 .HasForeignKey(x => x.BlackId)
                 .HasForeignKey(x => x.WhiteId);
+
+            builder.HasOne(x => x.Statistics)
+                .WithOne()
+                .HasForeignKey<User>(x => x.StatisticsId);
+
         }
     }
 }

@@ -23,7 +23,12 @@ builder.Services.AddHttpContextAccessor();
 
 //DbContext
 builder.Services.AddDbContext<UserDataContext>(opt =>
-        opt.UseSqlServer(configuration.GetConnectionString("Default")));
+        opt.UseNpgsql(configuration.GetConnectionString("Default")));
+
+using (var dbContext = builder.Services.BuildServiceProvider().GetRequiredService<UserDataContext>())
+{
+    dbContext.Database.Migrate();
+}
 
 var app = builder.Build();
 

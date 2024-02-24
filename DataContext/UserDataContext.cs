@@ -16,10 +16,11 @@ namespace UserDataService.DataContext
 
         public DbSet<Friendship> Friendships { get; set; }
 
-        public UserDataContext(DbContextOptions<UserDataContext> options) : base(options)
-        {
+        public DbSet<Chat> Chats { get; set; }
 
-        }
+        public DbSet<Message> Messages { get; set; }
+
+        public UserDataContext(DbContextOptions<UserDataContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

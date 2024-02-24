@@ -4,13 +4,14 @@ using UserDataService.DataContext.Entities;
 
 namespace UserDataService.DataContext.Configuration
 {
-    public class FriendshipConfiguration : IEntityTypeConfiguration<Friendship>
+    public class ChatConfiguration : IEntityTypeConfiguration<Chat>
     {
-        public void Configure(EntityTypeBuilder<Friendship> builder)
+        public void Configure(EntityTypeBuilder<Chat> builder)
         {
-            builder.HasOne(x => x.Friend)
+            builder.HasMany(x => x.Messages)
                 .WithOne()
-                .HasForeignKey<Friendship>(x => x.FriendId);
+                .HasForeignKey(x => x.ChatId);
+
         }
     }
 }

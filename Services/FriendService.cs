@@ -29,7 +29,8 @@ namespace UserDataService.Services
             if (senderId == userId) throw new Exception();
 
             var friendships = _dbContext.Friendships
-                .Where(x => (x.UserId == userId && x.FriendId == senderId) || (x.UserId == senderId && x.FriendId == userId));
+                .Where(x => (x.UserId == userId && x.FriendId == senderId)
+                    || (x.UserId == senderId && x.FriendId == userId));
 
             await friendships.ForEachAsync(x => x.IsAccepted = true);
 
@@ -39,10 +40,28 @@ namespace UserDataService.Services
         public async Task<IEnumerable<UserDto>> GetFriendRequests()
         {
             var userId = _userContextService.UserId;
-            var requests = await _dbContext.Friendships.AsNoTracking().Where(x => x.UserId == userId).Select(x => x.Friend).ToListAsync();
+            var requests = await _dbContext.Friendships
+                .AsNoTracking()
+                .Where(x => (x.UserId == userId && x.IsAccepted == false))
+                .Select(x => x.Friend)
+                .ToListAsync();
 
             var requestDtos = _mapper.Map<IEnumerable<UserDto>>(requests);
             return requestDtos;
+        }
+
+        public async Task<IEnumerable<UserDto>> GetFriends()
+        {
+            var userId = _userContextService.UserId;
+            var friends = await _dbContext.Friendships
+                .AsNoTracking()
+                .Where(x => (x.UserId == userId && x.IsAccepted == true))
+                .Select(x => x.Friend)
+                .ToListAsync();
+
+            var friendDtos = _mapper.Map<IEnumerable<UserDto>>(friends);
+
+            return friendDtos;
         }
 
         public async Task SendFriendRequst(int userId)

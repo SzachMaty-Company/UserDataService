@@ -7,5 +7,7 @@ namespace UserDataService.Interfaces
         Task SendFriendRequst(int userId);
         Task AcceptFrinedRequest(int userId);
         Task<IEnumerable<UserDto>> GetFriendRequests();
+
+        Task<IEnumerable<UserDto>> GetFriends();
     }
 }

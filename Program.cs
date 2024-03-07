@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using UserDataService.DataContext;
 using UserDataService.Interfaces;
 using UserDataService.Services;
@@ -17,6 +18,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IFriendService, FriendService>();
+builder.Services.AddScoped<IUserContextService, UserContextService>();
 
 //HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
@@ -29,6 +32,9 @@ using (var dbContext = builder.Services.BuildServiceProvider().GetRequiredServic
 {
     dbContext.Database.Migrate();
 }
+
+//Mapper
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

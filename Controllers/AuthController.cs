@@ -22,12 +22,5 @@ namespace UserDataService.Controllers
             var token = await _service.AuthenticateAsync(code);
             return Ok(token);
         }
-
-        [HttpGet("protected")]
-        public async Task<ActionResult<TokenDto>> Protected()
-        {
-            var token = await _service.GetTokenAsync();
-            return Ok(token);
-        }
     }
 }

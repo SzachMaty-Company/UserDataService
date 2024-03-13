@@ -14,6 +14,9 @@ builder.Services.AddSwaggerGen();
 //HttpClient
 builder.Services.AddHttpClient();
 
+//Mapper
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 //Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();

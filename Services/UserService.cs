@@ -19,14 +19,20 @@ namespace UserDataService.Services
 
         public async Task<UserDto> GetUserById(int id)
         {
-            var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _db.Users.AsNoTracking()
+                .Include(x => x.Statistics)
+                .ThenInclude(x => x.Games)
+                .FirstOrDefaultAsync(x => x.Id == id);
             var userDto = _mapper.Map<UserDto>(user);
             return userDto;
         }
 
         public async Task<UserDto> GetUserByName(string name)
         {
-            var user = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Surname == name);
+            var user = await _db.Users.AsNoTracking()
+                .Include(x => x.Statistics)
+                .ThenInclude(x => x.Games)
+                .FirstOrDefaultAsync(x => x.Surname == name);
             var userDto = _mapper.Map<UserDto>(user);
             return userDto;
         }

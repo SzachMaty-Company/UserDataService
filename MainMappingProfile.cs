@@ -9,6 +9,9 @@ namespace UserDataService
         public MainMappingProfile()
         {
             CreateMap<User, UserDto>();
+            CreateMap<Statistics, StatisticsDto>();
+            CreateMap<Game, GameDto>();
+            CreateMap<User, FriendDto>();
         }
     }
 }

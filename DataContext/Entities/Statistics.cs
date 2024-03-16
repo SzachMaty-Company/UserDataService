@@ -2,8 +2,9 @@
 {
     public class Statistics : BaseEntity
     {
-        public double WinrateAgainstIA { get; set; }
-        public double WinrateAgainstHumanPlayers { get; set; }
-        public List<Game> Games { get; set; }
+        public double WinrateIA { get; set; }
+        public double WinrateFriends { get; set; }
+        public int UserId { get; set; }
+        public List<Game> Games { get; set; } = new List<Game>();
     }
 }

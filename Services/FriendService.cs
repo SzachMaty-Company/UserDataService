@@ -37,7 +37,7 @@ namespace UserDataService.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<UserDto>> GetFriendRequests()
+        public async Task<IEnumerable<FriendDto>> GetFriendRequests()
         {
             var userId = _userContextService.UserId;
             var requests = await _dbContext.Friendships
@@ -46,11 +46,11 @@ namespace UserDataService.Services
                 .Select(x => x.Friend)
                 .ToListAsync();
 
-            var requestDtos = _mapper.Map<IEnumerable<UserDto>>(requests);
+            var requestDtos = _mapper.Map<IEnumerable<FriendDto>>(requests);
             return requestDtos;
         }
 
-        public async Task<IEnumerable<UserDto>> GetFriends()
+        public async Task<IEnumerable<FriendDto>> GetFriends()
         {
             var userId = _userContextService.UserId;
             var friends = await _dbContext.Friendships
@@ -59,7 +59,7 @@ namespace UserDataService.Services
                 .Select(x => x.Friend)
                 .ToListAsync();
 
-            var friendDtos = _mapper.Map<IEnumerable<UserDto>>(friends);
+            var friendDtos = _mapper.Map<IEnumerable<FriendDto>>(friends);
 
             return friendDtos;
         }

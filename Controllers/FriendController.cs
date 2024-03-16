@@ -16,14 +16,14 @@ namespace UserDataService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetFriends()
+        public async Task<ActionResult<IEnumerable<FriendDto>>> GetFriends()
         {
             var friends = await _service.GetFriends();
             return Ok(friends);
         }
 
         [HttpGet("request")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetRequests()
+        public async Task<ActionResult<IEnumerable<FriendDto>>> GetRequests()
         {
             var requests = await _service.GetFriendRequests();
             return Ok(requests);

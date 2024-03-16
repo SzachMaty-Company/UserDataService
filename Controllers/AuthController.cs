@@ -17,16 +17,9 @@ namespace UserDataService.Controllers
         }
 
         [HttpGet("google")]
-        public async Task<ActionResult<TokenDto>> GetToken()
+        public async Task<ActionResult<TokenDto>> GetToken([FromQuery] string code)
         {
-            var token = await _service.AuthenticateAsync();
-            return Ok(token);
-        }
-
-        [HttpGet("protected")]
-        public async Task<ActionResult<TokenDto>> Protected()
-        {
-            var token = await _service.GetTokenAsync();
+            var token = await _service.AuthenticateAsync(code);
             return Ok(token);
         }
     }

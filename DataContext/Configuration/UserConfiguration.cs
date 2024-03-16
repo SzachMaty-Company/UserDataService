@@ -6,17 +6,11 @@ namespace UserDataService.DataContext.Configuration
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        void IEntityTypeConfiguration<User>.Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasMany(x => x.Games)
-                .WithOne()
-                .HasForeignKey(x => x.BlackId)
-                .HasForeignKey(x => x.WhiteId);
-
             builder.HasOne(x => x.Statistics)
                 .WithOne()
-                .HasForeignKey<User>(x => x.StatisticsId);
-
+                .HasForeignKey<Statistics>(x => x.UserId);
         }
     }
 }

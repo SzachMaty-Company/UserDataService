@@ -1,8 +1,10 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using UserDataService.DataContext;
+using UserDataService.DataContext.Entities;
 using UserDataService.Interfaces;
 using UserDataService.Models;
 
@@ -10,23 +12,19 @@ namespace UserDataService.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly UserDataContext _db;
 
-        public AuthService(IHttpContextAccessor httpContextAccessor, IHttpClientFactory httpClientFactory, IConfiguration configuration, UserDataContext db)
+        public AuthService(IHttpClientFactory httpClientFactory, IConfiguration configuration, UserDataContext db)
         {
-            _httpContextAccessor = httpContextAccessor;
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
             _db = db;
         }
 
-        public async Task<TokenDto> AuthenticateAsync()
+        public async Task<TokenDto> AuthenticateAsync(string code)
         {
-            var httpContext = _httpContextAccessor.HttpContext;
-            var code = httpContext.Request.Query["code"];
 
             if (string.IsNullOrEmpty(code))
             {
@@ -61,9 +59,9 @@ namespace UserDataService.Services
             var userName = tokenContent.Claims.First(x => x.Type == "name").Value;
             var subject = tokenContent.Claims.First(x => x.Type == "sub").Value;
 
-            //var user = await _db.Users.FirstOrDefaultAsync(x => x.Email == userEmail);
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Email == userEmail);
 
-            /*if (user == null)
+            if (user == null)
             {
                 user = new User
                 {
@@ -74,7 +72,7 @@ namespace UserDataService.Services
                 await _db.Users.AddAsync(user);
                 await _db.SaveChangesAsync();
             }
-            */
+
             var issuer = _configuration["Jwt:Issuer"];
             var audience = _configuration["Jwt:Audience"];
 
@@ -82,7 +80,7 @@ namespace UserDataService.Services
             {
                 new(ClaimTypes.Email, userEmail),
                 new(ClaimTypes.Name, userName),
-                new(ClaimTypes.NameIdentifier, subject)
+                new(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -98,16 +96,6 @@ namespace UserDataService.Services
                 );
 
             return new TokenDto { Token = jwtHandler.WriteToken(jwtBearer) };
-        }
-
-        public Task<TokenDto> GetTokenAsync()
-        {
-            var httpContext = _httpContextAccessor.HttpContext;
-            var token = httpContext.Request.Headers.Authorization;
-            return Task.FromResult(new TokenDto()
-            {
-                Token = token
-            });
         }
     }
 }

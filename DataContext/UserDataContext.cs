@@ -12,13 +12,7 @@ namespace UserDataService.DataContext
 
         public DbSet<Statistics> Statistics { get; set; }
 
-        public DbSet<Move> Moves { get; set; }
-
         public DbSet<Friendship> Friendships { get; set; }
-
-        public DbSet<Chat> Chats { get; set; }
-
-        public DbSet<Message> Messages { get; set; }
 
         public UserDataContext(DbContextOptions<UserDataContext> options) : base(options) { }
 

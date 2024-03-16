@@ -4,7 +4,6 @@ namespace UserDataService.Interfaces
 {
     public interface IAuthService
     {
-        Task<TokenDto> AuthenticateAsync();
-        Task<TokenDto> GetTokenAsync();
+        Task<TokenDto> AuthenticateAsync(string code);
     }
 }

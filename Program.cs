@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using UserDataService;
 using UserDataService.DataContext;
 using UserDataService.Interfaces;
 using UserDataService.Middlewares;
@@ -34,6 +35,10 @@ builder.Services.AddDbContext<UserDataContext>(opt =>
 using (var dbContext = builder.Services.BuildServiceProvider().GetRequiredService<UserDataContext>())
 {
     dbContext.Database.Migrate();
+    if (!dbContext.Users.Any())
+    {
+        dbContext.Seed();
+    }
 }
 
 //Mapper

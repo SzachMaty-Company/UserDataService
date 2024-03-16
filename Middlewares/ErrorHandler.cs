@@ -11,7 +11,8 @@ namespace UserDataService.Middlewares
             }
             catch (Exception ex)
             {
-
+                context.Response.StatusCode = 500;
+                await context.Response.WriteAsync(ex.Message);
             }
         }
     }

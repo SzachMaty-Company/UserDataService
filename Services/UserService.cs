@@ -10,15 +10,22 @@ namespace UserDataService.Services
     {
         private readonly UserDataContext _db;
         private readonly IMapper _mapper;
+        private readonly IUserContextService _userContextService;
 
-        public UserService(UserDataContext db, IMapper mapper)
+        public UserService(UserDataContext db, IMapper mapper, IUserContextService userContextService)
         {
             _db = db;
             _mapper = mapper;
+            _userContextService = userContextService;
         }
 
         public async Task<UserDto> GetUserById(int id)
         {
+            if (id == null)
+            {
+                id = (int)_userContextService.UserId;
+            }
+
             var user = await _db.Users.AsNoTracking()
                 .Include(x => x.Statistics)
                 .ThenInclude(x => x.Games)
@@ -27,12 +34,12 @@ namespace UserDataService.Services
             return userDto;
         }
 
-        public async Task<UserDto> GetUserByName(string name)
+        public async Task<UserDto> GetUserByEmail(string email)
         {
             var user = await _db.Users.AsNoTracking()
                 .Include(x => x.Statistics)
                 .ThenInclude(x => x.Games)
-                .FirstOrDefaultAsync(x => x.Surname == name);
+                .FirstOrDefaultAsync(x => x.Email == email);
             var userDto = _mapper.Map<UserDto>(user);
             return userDto;
         }

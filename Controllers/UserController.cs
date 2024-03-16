@@ -15,18 +15,18 @@ namespace UserDataService.Controllers
             _service = service;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetUserById([FromRoute] int id)
+        [HttpGet()]
+        public async Task<ActionResult<UserDto>> GetUserById([FromQuery] int id)
         {
             var user = await _service.GetUserById(id);
-            return user;
+            return Ok(user);
         }
 
-        [HttpGet()]
-        public async Task<ActionResult<UserDto>> GetUserByName([FromQuery] string name)
+        [HttpGet("{email}")]
+        public async Task<ActionResult<UserDto>> GetUserByName([FromRoute] string email)
         {
-            var user = await _service.GetUserByName(name);
-            return user;
+            var user = await _service.GetUserByEmail(email);
+            return Ok(user);
         }
     }
 }

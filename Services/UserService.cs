@@ -21,7 +21,7 @@ namespace UserDataService.Services
 
         public async Task<UserDto> GetUserById(int id)
         {
-            if (id == null)
+            if (id == 0)
             {
                 id = (int)_userContextService.UserId;
             }

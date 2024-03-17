@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Text;
 using UserDataService;
 using UserDataService.DataContext;
 using UserDataService.Interfaces;
@@ -12,6 +14,25 @@ var configuration = builder.Configuration;
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var authenticationProviderKey = "JwtBearer";
+builder.Services
+    .AddAuthentication()
+    .AddJwtBearer(authenticationProviderKey,
+    options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = false,
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"]
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 //HttpClient
 builder.Services.AddHttpClient();
@@ -48,6 +69,10 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<ErrorHandler>();
 
 var app = builder.Build();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

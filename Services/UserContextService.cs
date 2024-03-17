@@ -12,8 +12,9 @@ namespace UserDataService.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public int? UserId => _httpContextAccessor.HttpContext.User == null ?
-            null :
-            int.Parse(_httpContextAccessor.HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
+        public int? UserId =>
+        _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier) == null ?
+        null :
+        int.Parse(_httpContextAccessor.HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
     }
 }

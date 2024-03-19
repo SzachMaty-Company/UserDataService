@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using UserDataService.DataContext;
 using UserDataService.DataContext.Entities;
+using UserDataService.Exceptions;
 using UserDataService.Interfaces;
 using UserDataService.Models;
 
@@ -28,7 +29,7 @@ namespace UserDataService.Services
 
             if (string.IsNullOrEmpty(code))
             {
-                return new TokenDto();
+                throw new BadRequestException();
             }
 
             var clientId = _configuration["Oauth:Google:ClientId"];

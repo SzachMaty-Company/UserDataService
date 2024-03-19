@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using UserDataService.DataContext;
 using UserDataService.DataContext.Entities;
+using UserDataService.Exceptions;
 using UserDataService.Interfaces;
 using UserDataService.Models;
 
@@ -25,12 +26,14 @@ namespace UserDataService.Services
         {
             var senderId = _userContextService.UserId;
 
-            if (senderId == null) throw new Exception();
-            if (senderId == userId) throw new Exception();
+            if (senderId == null) throw new UnauthorizedException();
+            if (senderId == userId) throw new BadRequestException();
 
             var friendships = _dbContext.Friendships
                 .Where(x => (x.UserId == userId && x.FriendId == senderId)
                     || (x.UserId == senderId && x.FriendId == userId));
+
+            if (friendships.Count() != 2) throw new BadRequestException();
 
             await friendships.ForEachAsync(x => x.IsAccepted = true);
 
@@ -40,6 +43,9 @@ namespace UserDataService.Services
         public async Task<IEnumerable<FriendDto>> GetFriendRequests()
         {
             var userId = _userContextService.UserId;
+
+            if (userId == null) throw new UnauthorizedException();
+
             var requests = await _dbContext.Friendships
                 .AsNoTracking()
                 .Where(x => (x.UserId == userId && x.IsAccepted == false))
@@ -53,6 +59,9 @@ namespace UserDataService.Services
         public async Task<IEnumerable<FriendDto>> GetFriends()
         {
             var userId = _userContextService.UserId;
+
+            if (userId == null) throw new UnauthorizedException();
+
             var friends = await _dbContext.Friendships
                 .AsNoTracking()
                 .Where(x => (x.UserId == userId && x.IsAccepted == true))
@@ -68,8 +77,8 @@ namespace UserDataService.Services
         {
             var senderId = _userContextService.UserId;
 
-            if (senderId == null) throw new Exception();
-            if (senderId == userId) throw new Exception();
+            if (senderId == null) throw new UnauthorizedException();
+            if (senderId == userId) throw new BadRequestException();
 
             var friendship1 = new Friendship()
             {

@@ -65,10 +65,22 @@ namespace UserDataService.Services
             var friends = await _dbContext.Friendships
                 .AsNoTracking()
                 .Where(x => (x.UserId == userId && x.IsAccepted == true))
+                .OrderBy(x => x.FriendId)
                 .Select(x => x.Friend)
                 .ToListAsync();
 
+            var winrates = await _dbContext.Friendships
+                .AsNoTracking()
+                .Where(x => (x.UserId == userId && x.IsAccepted == true))
+                .OrderBy(x => x.FriendId)
+                .Select(x => x.WinrateAgainst)
+                .ToListAsync();
+
             var friendDtos = _mapper.Map<IEnumerable<FriendDto>>(friends);
+            for (int i = 0; i < friendDtos.Count(); i++)
+            {
+                ((List<FriendDto>)friendDtos)[i].WinrateAgainst = winrates[i];
+            }
 
             return friendDtos;
         }

@@ -40,15 +40,19 @@ namespace UserDataService.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("UserId1")
+                        .HasColumnType("integer");
+
                     b.Property<double>("WinrateAgainst")
                         .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FriendId")
-                        .IsUnique();
+                    b.HasIndex("FriendId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Friendships");
                 });
@@ -149,16 +153,20 @@ namespace UserDataService.Migrations
             modelBuilder.Entity("UserDataService.DataContext.Entities.Friendship", b =>
                 {
                     b.HasOne("UserDataService.DataContext.Entities.User", "Friend")
-                        .WithOne()
-                        .HasForeignKey("UserDataService.DataContext.Entities.Friendship", "FriendId")
-                        .OnDelete(DeleteBehavior.ClientNoAction)
+                        .WithMany()
+                        .HasForeignKey("FriendId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("UserDataService.DataContext.Entities.User", "User")
-                        .WithMany("Friendships")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
+
+                    b.HasOne("UserDataService.DataContext.Entities.User", null)
+                        .WithMany("Friendships")
+                        .HasForeignKey("UserId1");
 
                     b.Navigation("Friend");
 

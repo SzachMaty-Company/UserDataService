@@ -24,7 +24,7 @@ namespace UserDataService.Services
         {
             if (id == 0)
             {
-                id = (int)_userContextService.UserId;
+                id = _userContextService.UserId == null ? 0 : (int)_userContextService.UserId;
             }
 
             if (id == 0) throw new UnauthorizedException();

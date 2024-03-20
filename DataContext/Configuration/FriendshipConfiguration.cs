@@ -8,10 +8,15 @@ namespace UserDataService.DataContext.Configuration
     {
         public void Configure(EntityTypeBuilder<Friendship> builder)
         {
+            builder.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
             builder.HasOne(x => x.Friend)
-                .WithOne()
-                .HasForeignKey<Friendship>(x => x.FriendId)
-                .OnDelete(DeleteBehavior.ClientNoAction);
+                .WithMany()
+                .HasForeignKey(x => x.FriendId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

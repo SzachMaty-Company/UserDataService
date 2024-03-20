@@ -2,8 +2,12 @@
 {
     public class StatisticsDto
     {
-        public double WinrateIA { get; set; }
+        public double WinrateAI { get; set; }
+        public int PlayAI { get; set; }
+        public int WinAI { get; set; }
         public double WinrateFriends { get; set; }
-        public List<GameDto> Games { get; set; }
+        public int PlayFriends { get; set; }
+        public int WinFriends { get; set; }
+        public List<GameDto> Games { get; set; } = null;
     }
 }

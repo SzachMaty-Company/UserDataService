@@ -56,11 +56,13 @@ namespace UserDataService.Services
             return requestDtos;
         }
 
-        public async Task<IEnumerable<FriendDto>> GetFriends()
+        public async Task<IEnumerable<FriendDto>> GetFriends(int id)
         {
-            var userId = _userContextService.UserId;
-
-            if (userId == null) throw new UnauthorizedException();
+            var userId = id;
+            if(userId == 0)
+            {
+                userId =(int)_userContextService.UserId;
+            }
 
             var friends = await _dbContext.Friendships
                 .AsNoTracking()

@@ -16,9 +16,9 @@ namespace UserDataService.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FriendDto>>> GetFriends()
+        public async Task<ActionResult<IEnumerable<FriendDto>>> GetFriends([FromQuery] int id)
         {
-            var friends = await _service.GetFriends();
+            var friends = await _service.GetFriends(id);
             return Ok(friends);
         }
 

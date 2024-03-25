@@ -26,6 +26,12 @@ namespace UserDataService
                     Name = "Grzesiu",
                     Email = "florida@tlen.pl",
                     Surname = "Floryda"
+                },
+                new User 
+                {
+                    Name = "Piotr",
+                    Email = "piotrnowak@wp.pl",
+                    Surname = "Nowak"
                 }
             };
 

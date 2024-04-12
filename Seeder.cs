@@ -11,6 +11,12 @@ namespace UserDataService
             {
                 new User
                 {
+                    Name = "AI",
+                    Email = "AI",
+                    Surname = "AI"
+                },
+                new User
+                {
                     Name = "Zbyszek",
                     Email = "zbyszek@o2.pl",
                     Surname = "Ziobro"
@@ -27,7 +33,7 @@ namespace UserDataService
                     Email = "florida@tlen.pl",
                     Surname = "Floryda"
                 },
-                new User 
+                new User
                 {
                     Name = "Piotr",
                     Email = "piotrnowak@wp.pl",
@@ -42,31 +48,31 @@ namespace UserDataService
 
             dbContext.Add(new Friendship
             {
-                UserId = users[0].Id,
-                FriendId = users[1].Id,
+                UserId = users[1].Id,
+                FriendId = users[2].Id,
                 WinrateAgainst = 40,
                 IsAccepted = true,
             });
 
             dbContext.Add(new Friendship
             {
-                UserId = users[1].Id,
-                FriendId = users[0].Id,
+                UserId = users[2].Id,
+                FriendId = users[1].Id,
                 WinrateAgainst = 60,
                 IsAccepted = true,
             });
 
             dbContext.Add(new Friendship
             {
-                UserId = users[0].Id,
-                FriendId = users[2].Id,
+                UserId = users[1].Id,
+                FriendId = users[3].Id,
                 WinrateAgainst = 50,
                 IsAccepted = true,
             });
             dbContext.Add(new Friendship
             {
-                UserId = users[2].Id,
-                FriendId = users[0].Id,
+                UserId = users[3].Id,
+                FriendId = users[1].Id,
                 WinrateAgainst = 50,
                 IsAccepted = true,
             });

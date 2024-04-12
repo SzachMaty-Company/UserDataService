@@ -398,7 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 #Files with secure data
-appsettings*.json
+
 
 #http file
 *.http

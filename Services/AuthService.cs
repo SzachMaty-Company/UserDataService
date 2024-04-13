@@ -57,8 +57,8 @@ namespace UserDataService.Services
             var tokenContent = jwtHandler.ReadJwtToken(token.id_token);
 
             var userEmail = tokenContent.Claims.First(x => x.Type == "email").Value;
-            var userName = tokenContent.Claims.First(x => x.Type == "name").Value;
-            var subject = tokenContent.Claims.First(x => x.Type == "sub").Value;
+            var givenName = tokenContent.Claims.First(x => x.Type == "given_name").Value;
+            var familyName = tokenContent.Claims.First(x => x.Type == "family_name").Value;
 
             var user = await _db.Users.FirstOrDefaultAsync(x => x.Email == userEmail);
 
@@ -66,8 +66,8 @@ namespace UserDataService.Services
             {
                 user = new User
                 {
-                    Surname = "",
-                    Name = userName,
+                    Surname = familyName,
+                    Name = givenName,
                     Email = userEmail,
                 };
                 await _db.Users.AddAsync(user);
@@ -80,7 +80,7 @@ namespace UserDataService.Services
             var claims = new List<Claim>()
             {
                 new(ClaimTypes.Email, userEmail),
-                new(ClaimTypes.Name, userName),
+                new(ClaimTypes.Name, $"{givenName} {familyName}"),
                 new(ClaimTypes.NameIdentifier, user.Id.ToString())
             };
 

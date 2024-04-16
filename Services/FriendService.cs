@@ -40,6 +40,24 @@ namespace UserDataService.Services
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task DeclineFriendRequest(int userId)
+        {
+            var senderId = _userContextService.UserId;
+
+            if (senderId == null) throw new UnauthorizedException();
+            if (senderId == userId) throw new BadRequestException();
+
+            var friendships = _dbContext.Friendships
+                .Where(x => (x.UserId == userId && x.FriendId == senderId)
+                    || (x.UserId == senderId && x.FriendId == userId));
+
+            if (friendships.Count() != 2) throw new BadRequestException();
+
+            await friendships.ForEachAsync(x => _dbContext.Remove(x));
+
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<FriendDto>> GetFriendRequests()
         {
             var userId = _userContextService.UserId;
@@ -59,9 +77,9 @@ namespace UserDataService.Services
         public async Task<IEnumerable<FriendDto>> GetFriends(int id)
         {
             var userId = id;
-            if(userId == 0)
+            if (userId == 0)
             {
-                userId =(int)_userContextService.UserId;
+                userId = (int)_userContextService.UserId;
             }
 
             var friends = await _dbContext.Friendships

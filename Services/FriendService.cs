@@ -60,7 +60,8 @@ namespace UserDataService.Services
             HttpClient httpClient = new HttpClient();
 
             var content = new StringContent(JsonConvert.SerializeObject(chatServiceMessage), Encoding.UTF8, "application/json");
-            var res = await httpClient.PostAsync("http://localhost:8124/internal/chat", content);
+            Console.WriteLine(content);
+            var res = await httpClient.PostAsync("http://chatservice:8124/internal/chat", content);
 
             Console.WriteLine("Internal chat status code:" + res.StatusCode);
 

@@ -48,23 +48,23 @@ namespace UserDataService.Services
             {
                 new ChatMember
                 {
-                    UserId = friendship1.User.Id,
-                    UserName = friendship1.User.Name,
+                    userId = friendship1.User.Id,
+                    username = friendship1.User.Name,
                 },
                 new ChatMember
                 {
-                    UserId = friendship2.User.Id,
-                    UserName = friendship2.User.Name,
+                    userId = friendship2.User.Id,
+                    username = friendship2.User.Name,
                 }
             };
 
-            chatServiceMessage.ChatMembers.AddRange(list);
+            chatServiceMessage.chatMembers.AddRange(list);
 
             HttpClient httpClient = new();
 
             var content = new StringContent(JsonConvert.SerializeObject(chatServiceMessage), Encoding.UTF8, "application/json");
 
-            Console.WriteLine(content);
+            Console.WriteLine(JsonConvert.SerializeObject(chatServiceMessage));
 
             var res = await httpClient.PostAsync("http://chatservice:8124/internal/chat", content);
 

@@ -2,12 +2,12 @@
 {
     public class ChatMember
     {
-        public int UserId { get; set; }
-        public string UserName { get; set; }
+        public int userId { get; set; }
+        public string username { get; set; }
     }
 
     public class ChatServiceMessage
     {
-        public List<ChatMember> ChatMembers = [];
+        public List<ChatMember> chatMembers = [];
     }
 }

@@ -46,7 +46,7 @@ namespace UserDataService
 
             users = dbContext.Users.ToList();
 
-            dbContext.Add(new Friendship
+            /*dbContext.Add(new Friendship
             {
                 UserId = users[1].Id,
                 FriendId = users[2].Id,
@@ -75,7 +75,7 @@ namespace UserDataService
                 FriendId = users[1].Id,
                 WinrateAgainst = 50,
                 IsAccepted = true,
-            });
+            });*/
 
             dbContext.SaveChanges();
             return dbContext;

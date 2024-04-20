@@ -31,36 +31,41 @@ namespace UserDataService.Services
             if (senderId == null) throw new UnauthorizedException();
             if (senderId == userId) throw new BadRequestException();
 
-            var friendships = _dbContext.Friendships
-                .Where(x => (x.UserId == userId && x.FriendId == senderId)
-                    || (x.UserId == senderId && x.FriendId == userId));
+            var friendship1 = _dbContext.Friendships
+                .Include(x => x.User)
+                .FirstOrDefault(x => (x.UserId == userId && x.FriendId == senderId)) ?? throw new BadRequestException("No sent");
 
-            if (friendships.Count() != 2) throw new BadRequestException();
+            var friendship2 = _dbContext.Friendships
+                .Include(x => x.User)
+                .FirstOrDefault(x => (x.UserId == senderId && x.FriendId == userId)) ?? throw new BadRequestException("No sent");
 
-            await friendships.ForEachAsync(x => x.IsAccepted = true);
+            friendship1.IsAccepted = true;
+            friendship2.IsAccepted = true;
 
             ChatServiceMessage chatServiceMessage = new();
 
-            var list = new List<ChatMember>();
-
-            list.Add(new ChatMember
+            var list = new List<ChatMember>
             {
-                UserId = friendships.First(x => x.UserId == senderId).User.Id,
-                UserName = friendships.First(x => x.UserId == senderId).User.Name,
-            });
-
-            list.Add(new ChatMember
-            {
-                UserId = friendships.First(x => x.UserId == userId).User.Id,
-                UserName = friendships.First(x => x.UserId == userId).User.Name,
-            });
+                new ChatMember
+                {
+                    UserId = friendship1.User.Id,
+                    UserName = friendship1.User.Name,
+                },
+                new ChatMember
+                {
+                    UserId = friendship2.User.Id,
+                    UserName = friendship2.User.Name,
+                }
+            };
 
             chatServiceMessage.ChatMembers.AddRange(list);
 
-            HttpClient httpClient = new HttpClient();
+            HttpClient httpClient = new();
 
             var content = new StringContent(JsonConvert.SerializeObject(chatServiceMessage), Encoding.UTF8, "application/json");
+
             Console.WriteLine(content);
+
             var res = await httpClient.PostAsync("http://chatservice:8124/internal/chat", content);
 
             Console.WriteLine("Internal chat status code:" + res.StatusCode);
@@ -75,13 +80,14 @@ namespace UserDataService.Services
             if (senderId == null) throw new UnauthorizedException();
             if (senderId == userId) throw new BadRequestException();
 
-            var friendships = _dbContext.Friendships
-                .Where(x => (x.UserId == userId && x.FriendId == senderId)
-                    || (x.UserId == senderId && x.FriendId == userId));
+            var friendship1 = _dbContext.Friendships
+                .FirstOrDefault(x => (x.UserId == userId && x.FriendId == senderId)) ?? throw new BadRequestException("No sent");
 
-            if (friendships.Count() != 2) throw new BadRequestException();
+            var friendship2 = _dbContext.Friendships
+                .FirstOrDefault(x => (x.UserId == senderId && x.FriendId == userId)) ?? throw new BadRequestException("No sent");
 
-            await friendships.ForEachAsync(x => _dbContext.Remove(x));
+            _dbContext.Remove(friendship1);
+            _dbContext.Remove(friendship2);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -139,6 +145,18 @@ namespace UserDataService.Services
 
             if (senderId == null) throw new UnauthorizedException();
             if (senderId == userId) throw new BadRequestException();
+
+
+            var friendshipx1 = _dbContext.Friendships
+                .FirstOrDefault(x => x.UserId == userId && x.FriendId == senderId);
+
+            var friendshipx2 = _dbContext.Friendships
+                .FirstOrDefault(x => x.UserId == senderId && x.FriendId == userId);
+
+            if (friendshipx1 != null || friendshipx2 != null)
+            {
+                throw new BadRequestException("Already sent");
+            }
 
             var friendship1 = new Friendship()
             {

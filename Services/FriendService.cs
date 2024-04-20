@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using System.Text;
 using UserDataService.DataContext;
 using UserDataService.DataContext.Entities;
 using UserDataService.Exceptions;
@@ -36,6 +38,29 @@ namespace UserDataService.Services
             if (friendships.Count() != 2) throw new BadRequestException();
 
             await friendships.ForEachAsync(x => x.IsAccepted = true);
+
+            ChatServiceMessage chatServiceMessage = new();
+
+            var list = new List<ChatMember>();
+
+            list.Add(new ChatMember
+            {
+                UserId = friendships.First(x => x.UserId == senderId).User.Id,
+                UserName = friendships.First(x => x.UserId == senderId).User.Name,
+            });
+
+            list.Add(new ChatMember
+            {
+                UserId = friendships.First(x => x.UserId == userId).User.Id,
+                UserName = friendships.First(x => x.UserId == userId).User.Name,
+            });
+
+            chatServiceMessage.ChatMembers.AddRange(list);
+
+            HttpClient httpClient = new HttpClient();
+
+            var content = new StringContent(JsonConvert.SerializeObject(chatServiceMessage), Encoding.UTF8, "application/json");
+            await httpClient.PostAsync("http://localhost:8124/internal/chat", content);
 
             await _dbContext.SaveChangesAsync();
         }

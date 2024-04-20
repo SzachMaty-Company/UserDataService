@@ -66,7 +66,7 @@ namespace UserDataService.Services
 
             var requests = await _dbContext.Friendships
                 .AsNoTracking()
-                .Where(x => (x.UserId == userId && x.IsAccepted == false))
+                .Where(x => (x.UserId == userId && x.IsAccepted == false && x.SentBy != userId))
                 .Select(x => x.Friend)
                 .ToListAsync();
 
@@ -117,12 +117,14 @@ namespace UserDataService.Services
                 FriendId = (int)senderId,
                 UserId = userId,
                 IsAccepted = false,
+                SentBy = (int)senderId
             };
             var friendship2 = new Friendship()
             {
                 FriendId = userId,
                 UserId = (int)senderId,
-                IsAccepted = false
+                IsAccepted = false,
+                SentBy = (int)senderId
             };
 
             await _dbContext.AddAsync(friendship1);

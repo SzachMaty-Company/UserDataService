@@ -42,5 +42,12 @@ namespace UserDataService.Controllers
             await _service.AcceptFrinedRequest(userId);
             return Accepted();
         }
+
+        [HttpPost("{userId}/decline")]
+        public async Task<ActionResult> DeclineFriendRequest([FromRoute] int userId)
+        {
+            await _service.DeclineFriendRequest(userId);
+            return Accepted();
+        }
     }
 }

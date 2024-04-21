@@ -8,5 +8,6 @@
         public User Friend { get; set; }
         public double WinrateAgainst { get; set; }
         public bool IsAccepted { get; set; }
+        public int SentBy { get; set; }
     }
 }
